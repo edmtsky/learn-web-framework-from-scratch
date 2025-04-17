@@ -175,3 +175,75 @@ output in the terminal with the server when the client sent the request:
 }
 ```
 
+
+#### Adding routes with bindings
+
+move handler from router.ex to its own module:
+create sub package router/handlers/
+
+```elixir
+defmodule CowboyExample.Router do
+  alias CowboyExample.Router.Handlers.{Root, Greet} # +
+
+  @doc """
+  Returns the list of routes configured by this web server
+  """
+  def routes() do
+    [
+      {:_, [
+        {"/", Root, []},
+        {"/greet/:who", [who: :nonempty], Greet, []}      # << new route
+      ]},
+    ]
+  end
+
+  # move handler to its own separated module
+end
+```
+
+./lib/cowboy_example/router/handlers/root.ex
+```elixir
+defmodule CowboyExample.Router.Handlers.Root do
+  require Logger
+
+  def init(req0, state) do
+    Logger.info("Received request: #{inspect req0}")
+    req1 =
+      :cowboy_req.reply(
+        200,
+        %{"content-type" => "text/html"},
+        "Hello World\n",
+        req0
+      )
+    {:ok, req1, state}
+  end
+end
+```
+
+cowboy_example/lib/cowboy_example/router/handlers/greet.ex
+```elixir
+defmodule CowboyExample.Router.Handlers.Greet do
+  require Logger
+
+  def init(req0, state) do
+    Logger.info("Received request: #{inspect req0}")
+    who = :cowboy_req.binding(:who, req0)
+    req1 =
+      :cowboy_req.reply(
+        200,
+        %{"content-type" => "text/html"},
+        "Hello #{who}\n",
+        req0
+      )
+    {:ok, req1, state}
+  end
+end
+```
+
+next, restrat server with Ctrl-C + `mix run --no-halt`
+
+```sh
+curl http://localhost:4040/greet/Elixir
+Hello Elixir
+```
+
