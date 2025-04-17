@@ -15,6 +15,17 @@ defmodule Webfw.HttpServer do
     reuseaddr: true
   ]
 
+
+  @doc """
+  used to add HTTP Server to the application's supervision tree
+  """
+  def child_spec(init_args) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start, init_args}
+    }
+  end
+
   def start(port) do
     ensure_configured!()
 
