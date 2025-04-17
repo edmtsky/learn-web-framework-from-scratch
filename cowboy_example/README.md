@@ -358,3 +358,99 @@ curl http://localhost:4040/static/bad.html
 ```
 
 
+
+### Testing the web server with ExUnit
+
+make server port configurable
+
+
+./lib/cowboy_example/application.ex
+```elixir
+defmodule CowboyExample.Application do
+  @moduledoc false
+
+  use Application
+
+  @port Application.compile_env(:cowboy_example, :port, 4040) # <<< +++
+
+  @impl true
+  def start(_type, _args) do
+    children = [
+      {Task, fn -> CowboyExample.Server.start(@port) end} # << Update this line
+    ]
+    # ...
+  end
+end
+```
+
+```sh
+mkdir config && touch config/config.exs
+```
+
+```elixir
+import Config
+
+if Mix.env() == :test do
+  config :cowboy_example, port: 4041
+
+  config :logger, warn: false
+end
+```
+
+add a Finch - high-performance HTTP client as dependency:
+
+```sh
+defp deps do
+[
+  {:finch, "~> 0.6"},
+  # ...
+]
+```
+
+```sh
+mix deps.get
+```
+
+```
+Resolving Hex dependencies...
+Resolution completed in 5.558s
+New:
+  finch 0.19.0
+  hpax 1.0.3
+  mime 2.0.6
+  mint 1.7.1
+  nimble_options 1.1.1
+  nimble_pool 1.1.0
+  telemetry 1.3.0
+Unchanged:
+  cowboy 2.13.0
+  cowlib 2.15.0
+  ranch 2.2.0
+* Getting finch (Hex package)
+* Getting mime (Hex package)
+* Getting mint (Hex package)
+* Getting nimble_options (Hex package)
+* Getting nimble_pool (Hex package)
+* Getting telemetry (Hex package)
+* Getting hpax (Hex package)
+```
+
+add first test test/cowboy_example/server_test.exs
+
+```sh
+mix test
+Running ExUnit with seed: 671048, max_cases: 8
+
+...
+13:31:00.865 [info] Received request: %{pid: #PID<0.278.0>, port: 4041, scheme: "http", version: :"HTTP/1.1", path: "/static/index.html", host: "localhost", peer: {{127, 0, 0, 1}, 60052}, bindings: %{page: "index.html"}, ref: :listener, cert: :undefined, headers: %{"host" => "localhost:4041", "user-agent" => "mint/1.7.1"}, host_info: :undefined, path_info: :undefined, method: "GET", streamid: 2, body_length: 0, has_body: false, qs: "", sock: {{127, 0, 0, 1}, 4041}}
+.
+13:31:00.867 [info] Received request: %{pid: #PID<0.278.0>, port: 4041, scheme: "http", version: :"HTTP/1.1", path: "/greet/Elixir", host: "localhost", peer: {{127, 0, 0, 1}, 60052}, bindings: %{who: "Elixir"}, ref: :listener, cert: :undefined, headers: %{"host" => "localhost:4041", "user-agent" => "mint/1.7.1"}, host_info: :undefined, path_info: :undefined, method: "GET", streamid: 3, body_length: 0, has_body: false, qs: "", sock: {{127, 0, 0, 1}, 4041}}
+.
+13:31:00.869 [info] Received request: %{pid: #PID<0.278.0>, port: 4041, scheme: "http", version: :"HTTP/1.1", path: "/greet/Elixir", host: "localhost", peer: {{127, 0, 0, 1}, 60052}, bindings: %{who: "Elixir"}, ref: :listener, cert: :undefined, headers: %{"host" => "localhost:4041", "user-agent" => "mint/1.7.1"}, host_info: :undefined, path_info: :undefined, method: "GET", streamid: 4, body_length: 0, has_body: false, qs: "greeting=Hi", sock: {{127, 0, 0, 1}, 4041}}
+.
+13:31:00.871 [info] Received request: %{pid: #PID<0.278.0>, port: 4041, scheme: "http", version: :"HTTP/1.1", path: "/", host: "localhost", peer: {{127, 0, 0, 1}, 60052}, bindings: %{}, ref: :listener, cert: :undefined, headers: %{"host" => "localhost:4041", "user-agent" => "mint/1.7.1"}, host_info: :undefined, path_info: :undefined, method: "GET", streamid: 5, body_length: 0, has_body: false, qs: "", sock: {{127, 0, 0, 1}, 4041}}
+.
+Finished in 0.1 seconds (0.00s async, 0.1s sync)
+1 doctest, 6 tests, 0 failures
+```
+
