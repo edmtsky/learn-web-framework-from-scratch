@@ -289,3 +289,41 @@ curl -X POST http://localhost:4040/
 Hello World
 ```
 
+
+
+### validate HTTP methods (allow only GET)
+
+```elixir
+defmodule CowboyExample.Router.Handlers.Greet do
+  # ..
+  def init(%{method: "GET"} = req0, state) do
+  # ..
+  end
+
+  # General clause for init/2 which responds with 404
+  def init(req0, state) do
+    Logger.info("Received request: #{inspect req0}")
+    req1 =
+      :cowboy_req.reply(
+        404,
+        %{"content-type" => "text/html"},
+        "404 Not found\n",
+        req0
+      )
+    {:ok, req1, state}
+  end
+end
+
+```
+```sh
+curl http://localhost:4040/greet/Elixir\?greeting=Hi
+Hi Elixir
+```
+
+POST request give 404 error:
+
+```sh
+curl http://localhost:4040/greet/Elixir\?greeting=Hi -X POST
+404 Not found
+```
+

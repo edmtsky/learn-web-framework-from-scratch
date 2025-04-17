@@ -10,7 +10,7 @@ defmodule CowboyExample.Router.Handlers.Greet do
   This function handles the "/greet/:who", logs the requests and
   responds with Hello `who` as the body
   """
-  def init(req0, state) do
+  def init(%{method: "GET"} = req0, state) do
     Logger.info("Received request: #{inspect req0}")
     who = :cowboy_req.binding(:who, req0)
 
@@ -28,6 +28,19 @@ defmodule CowboyExample.Router.Handlers.Greet do
         req0
       )
 
+    {:ok, req1, state}
+  end
+
+  # General clause for init/2 which responds with 404
+  def init(req0, state) do
+    Logger.info("Received request: #{inspect req0}")
+    req1 =
+      :cowboy_req.reply(
+        404,
+        %{"content-type" => "text/html"},
+        "404 Not found\n",
+        req0
+      )
     {:ok, req1, state}
   end
 end
