@@ -57,3 +57,68 @@ Messages:
   {:http_request, :GET, {:abs_path, "/"}, {1, 1}}
 ]
 ```
+
+
+### Step 2 - Responding over a TCP socket using :gen_tcp
+
+```elixir
+defmodule ExperimentalServer do
+  require Logger
+
+  def start(port) do
+    listener_options = [active: false, packet: :http_bin, reuseaddr: true]
+
+    {:ok, listen_socket} = :gen_tcp.listen(port, listener_options)
+
+    IO.puts("Listening on port #{port}")
+    listen(listen_socket)
+    :gen_tcp.close(listen_socket) # :ok
+  end
+
+  defp listen(listen_socket) do
+    {:ok, connection_sock} = :gen_tcp.accept(listen_socket)
+    {:ok, req} = :gen_tcp.recv(connection_sock, 0)
+
+    Logger.info("Got request: #{inspect req}")
+    respond(connection_sock)
+    listen(listen_socket)
+  end
+
+  defp respond(connection_sock) do
+    :gen_tcp.send(connection_sock, "Response from the Server\n")
+
+    Logger.info("Sent response")
+
+    :gen_tcp.close(connection_sock)
+  end
+end
+
+ExperimentalServer.start(4040)
+```
+
+check out:
+
+t1:
+```sh
+make run
+elixir experiment_server.exs
+Listening on port 4040
+```
+
+t2:
+```sh
+curl http://localhost:4040/
+curl: (1) Received HTTP/0.9 when not allowed
+```
+
+t1:
+```sh
+16:03:48.806 [info] Got request: {:http_request, :GET, {:abs_path, "/"}, {1, 1}}
+
+16:03:48.810 [info] Sent response
+```
+
+So, by default, send/2 sends an HTTP/0.9 response.
+
+
+
