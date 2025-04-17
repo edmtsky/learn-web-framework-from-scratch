@@ -327,3 +327,34 @@ curl http://localhost:4040/greet/Elixir\?greeting=Hi -X POST
 404 Not found
 ```
 
+
+### Serve static HTML files
+
+create static index.html file to serve:
+```sh
+mkdir -p priv/static/ && echo "<h1>Hello World</h1>" > priv/static/index.html
+```
+
+add new module, which can read static file from priv/static directory:
+
+add ./lib/cowboy_example/router/handlers/static.ex
+
+check manualy:
+run web-server
+```sh
+mix run --no-halt
+```
+
+send client requests to static files:
+```sh
+curl http://localhost:4040/static/index.html
+<h1>Hello World</h1>
+```
+
+fail case:
+```sh
+curl http://localhost:4040/static/bad.html
+404 Not found
+```
+
+
