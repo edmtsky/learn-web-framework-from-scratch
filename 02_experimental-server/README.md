@@ -123,7 +123,7 @@ So, by default, send/2 sends an HTTP/0.9 response.
 to fix that, and use http/1.1:
 
 ```elixir
-defmodule ExperimentServer do
+defmodule ExperimentalServer do
   # ..
 
   defp respond(connection_sock) do
@@ -154,4 +154,54 @@ curl http://localhost:4040/
 
 Response from the Server
 ```
+
+
+
+### Add Specific route
+
+```elixir
+  # ...
+
+  defp listen(listen_socket) do
+    {:ok, connection_sock} = :gen_tcp.accept(listen_socket)
+    {:ok, req} = :gen_tcp.recv(connection_sock, 0)
+
+    {_http_req, method, {_type, path}, _v} = req
+
+    Logger.info("Got request: #{inspect req}")
+    respond(connection_sock, {method, path})
+
+    listen(listen_socket)
+  end
+
+  defp respond(connection_sock, route) do
+    response = get_response(route)
+
+    :gen_tcp.send(connection_sock, response)
+    Logger.info("Sent response")
+
+    :gen_tcp.close(connection_sock)
+  end
+
+  defp get_response(route) do
+    {body, status} = body_and_status_for(route)
+    http_1_1_response(body, status)
+  end
+
+  defp body_and_status_for({:GET, "/hello"}) do
+    {"Hello World\n", 200}
+  end
+
+  defp body_and_status_for(_), do: {"Not Found\n", 404}
+```
+
+check out:
+```sh
+curl http://localhost:4040/
+Not Found
+
+curl http://localhost:4040/hello
+Hello World
+```
+
 
