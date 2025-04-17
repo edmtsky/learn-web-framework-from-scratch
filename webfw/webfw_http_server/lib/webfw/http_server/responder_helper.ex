@@ -1,6 +1,6 @@
-defmodule Webfw.HTTPServer.ResponderHelper do
+defmodule Webfw.HttpServer.ResponderHelper do
   def http_response(body) do
-    %Webfw.HTTPResponse{body: body}
+    %Webfw.HttpResponse{body: body}
   end
 
   def put_header(%{headers: headers} = resp, key, value) do

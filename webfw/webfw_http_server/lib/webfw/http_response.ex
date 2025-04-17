@@ -1,4 +1,4 @@
-defmodule Webfw.HTTPResponse do
+defmodule Webfw.HttpResponse do
   defstruct headers: %{}, body: "", status: 200
 
   @type t :: %__MODULE__{

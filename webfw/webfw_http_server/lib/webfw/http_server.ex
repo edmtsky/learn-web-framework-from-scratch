@@ -54,8 +54,8 @@ defmodule Webfw.HttpServer do
   """
   def respond(req, method, path) do
     # bridge to external modules
-    %Webfw.HTTPResponse{} = resp = responder().resp(req, method, path)
-    resp_string = Webfw.HTTPResponse.to_string(resp)
+    %Webfw.HttpResponse{} = resp = responder().resp(req, method, path)
+    resp_string = Webfw.HttpResponse.to_string(resp)
 
     :gen_tcp.send(req, resp_string)
 

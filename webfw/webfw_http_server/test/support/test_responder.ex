@@ -1,7 +1,7 @@
 defmodule Webfw.TestResponder do
-  import Webfw.HTTPServer.ResponderHelper
+  import Webfw.HttpServer.ResponderHelper
 
-  @behaviour Webfw.HTTPServer.Responder
+  @behaviour Webfw.HttpServer.Responder
 
   @impl true
   def resp(_req, method, path) do
