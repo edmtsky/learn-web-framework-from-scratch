@@ -120,5 +120,38 @@ t1:
 
 So, by default, send/2 sends an HTTP/0.9 response.
 
+to fix that, and use http/1.1:
 
+```elixir
+defmodule ExperimentServer do
+  # ..
+
+  defp respond(connection_sock) do
+    # Send a proper HTTP/1.1 response with status
+    response = http_1_1_response("Response from the Server\n", 200)
+    :gen_tcp.send(connection_sock, response)
+    Logger.info("Sent response")
+
+    :gen_tcp.close(connection_sock)
+  end
+
+  # Converts a body to HTTP/1.1 response string
+  defp http_1_1_response(body, status) do
+    """
+    HTTP/1.1 #{status}\r
+    Content-Type: text/html\r
+    Content-Length: #{byte_size(body)}\r
+    \r
+    #{body}
+    """
+  end
+end
+```
+
+Now its works with curl:
+```sh
+curl http://localhost:4040/
+
+Response from the Server
+```
 

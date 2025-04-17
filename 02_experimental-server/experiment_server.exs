@@ -21,11 +21,23 @@ defmodule ExperimentalServer do
   end
 
   defp respond(connection_sock) do
-    :gen_tcp.send(connection_sock, "Response from the Server\n")
-
+    response = http_1_1_response("Response from the Server\n", 200)
+    :gen_tcp.send(connection_sock, response)
     Logger.info("Sent response")
 
     :gen_tcp.close(connection_sock)
+  end
+
+    # Send a proper HTTP/1.1 response with status
+  # Converts a body to HTTP/1.1 response string
+  defp http_1_1_response(body, status) do
+    """
+    HTTP/1.1 #{status}\r
+    Content-Type: text/html\r
+    Content-Length: #{byte_size(body)}\r
+    \r
+    #{body}
+    """
   end
 end
 
