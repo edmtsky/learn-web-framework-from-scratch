@@ -4,6 +4,22 @@ defmodule Plug.Webfw.HttpServer do
   """
   @adapter Plug.Webfw.HttpServer.Conn
 
+  def child_spec(plug: plug, port: port, options: options) do
+    Application.put_env(
+      :webfw_http_server,
+      :dispatcher,
+      {__MODULE__, [plug: plug, options: options]}
+    )
+
+    %{start: {__MODULE__, :start_linked_server, [port]}}
+  end
+
+  def start_linked_server(port) do
+    Task.start_link(fn ->
+      Webfw.HttpServer.start(port)
+    end)
+  end
+
   # initialize own plug
   def init(req, method, path, plug: plug, options: opts) do
     conn = conn_from_req(req, method, path)

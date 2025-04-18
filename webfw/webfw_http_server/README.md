@@ -10,3 +10,7 @@ This is a second iteration of implementation aimed to work with Plug library
 (the first implementation intended to work without Plug can be seen via git
 history. see commit with hash: `df3f6c2`
 
+
+## TODOList
+
+- [-] rewrite test to work with Plug (move away from responder to dispatcher)

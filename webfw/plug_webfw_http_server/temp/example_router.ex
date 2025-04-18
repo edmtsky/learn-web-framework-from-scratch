@@ -3,6 +3,13 @@ defmodule ExampleRouter do
   iex -S mix
 
   iex> Code.require_file("./temp/example_router.ex")
+  iex> opts = [plug: ExampleRouter, port: 4040, options: []]
+  iex> %{start: {mod, fun, args}} = Plug.Webfw.HttpServer.child_spec(opts)
+  iex> apply(mod, fun, args)
+
+  or
+
+  iex> Code.require_file("./temp/example_router.ex")
   iex> options = {Plug.Webfw.HttpServer, [plug: ExampleRouter, options: []]}
   iex> Application.put_env(:webfw_http_server, :dispatcher, options)
   iex> Webfw.HttpServer.start(4040)
