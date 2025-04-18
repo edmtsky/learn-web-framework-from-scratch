@@ -22,7 +22,11 @@ defmodule Webfw.HttpServer do
   def child_spec(init_args) do
     %{
       id: __MODULE__,
-      start: {__MODULE__, :start, init_args}
+      start: {
+        Task,
+        :start_link,
+        [fn -> apply(__MODULE__, :start, init_args) end]
+      }
     }
   end
 
