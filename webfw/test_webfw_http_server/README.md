@@ -61,3 +61,23 @@ Not Found
 ```
 
 
+## to check out the concurrency
+
+t1:
+```sh
+mix run --no-halt
+```
+
+t2:
+```sh
+curl http://localhost:4001/long-operation
+# hands 3 seconds
+Lone-operation done
+```
+
+t3:
+```sh
+curl http://localhost:4001/hello
+Hello World
+```
+

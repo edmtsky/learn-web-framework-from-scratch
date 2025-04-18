@@ -8,6 +8,13 @@ defmodule TestWebfwHttpServer.Responder do
         |> put_header("Content-type", "text/html")
         |> put_status(200)
 
+      method == :GET && path == "/long-operation" ->
+        # sleep for 5 seconds
+        :timer.sleep(5000)
+        http_response("Long Operation done\n")
+        |> put_header("Content-type", "text/html")
+        |> put_status(200)
+
       true ->
         http_response("Not Found\n")
         |> put_header("Content-type", "text/html")

@@ -56,7 +56,8 @@ defmodule Webfw.HttpServer do
 
     Logger.info("Received HTTP request #{method} at #{path}")
 
-    respond(req, method, path)
+    spawn(__MODULE__, :respond, [req, method, path])
+
     listen(sock)
   end
 
