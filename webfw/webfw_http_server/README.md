@@ -1,21 +1,12 @@
 # WebfwHttpServer
 
-**TODO: Add description**
+A simple http server written in Elixir from scratch with the goals of learning,
+and to study and understand how works the web frameworks under the hood.
 
-## Installation
+This http server is conceived as part of own web-framework and organized in
+the form of a package (library as an external dependensy)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `webfw_http_server` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:webfw_http_server, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/webfw_http_server>.
+This is a second iteration of implementation aimed to work with Plug library
+(the first implementation intended to work without Plug can be seen via git
+history. see commit with hash: `df3f6c2`
 

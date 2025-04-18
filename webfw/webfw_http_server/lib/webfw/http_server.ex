@@ -44,43 +44,39 @@ defmodule Webfw.HttpServer do
   end
 
   defp ensure_configured!() do
-    case responder() do
-      nil -> raise "No `responder` configured for `webfw_http_server`"
+    case dispatcher() do
+      nil -> raise "No `dispatcher` configured for `webfw_http_server`"
       _responder -> :ok
     end
   end
 
   def listen(sock) do
     {:ok, req} = :gen_tcp.accept(sock)
+    recv_resp = :gen_tcp.recv(req, 0)
 
     {
       :ok,
       {_http_req, method, {_type, path}, _v}
-    } = :gen_tcp.recv(req, 0)
+    } = recv_resp
 
     Logger.info("Received HTTP request #{method} at #{path}")
 
-    spawn(__MODULE__, :respond, [req, method, path])
+    dispatch(req, method, path)
 
     listen(sock)
   end
 
-  @doc """
-  makes a call to resp/3 on the configured responder module
-  """
-  def respond(req, method, path) do
-    # bridge to external modules
-    %Webfw.HttpResponse{} = resp = responder().resp(req, method, path)
-    resp_string = Webfw.HttpResponse.to_string(resp)
+  defp dispatch(req, method, path) do
+    case dispatcher() do
+      {mod, opts} ->
+        mod.init(req, method, path, opts)
 
-    :gen_tcp.send(req, resp_string)
-
-    Logger.info("Response sent: \n#{resp_string}")
-
-    :gen_tcp.close(req)
+      mod ->
+        mod.init(req, method, path, [])
+    end
   end
 
-  defp responder() do
-    Application.get_env(:webfw_http_server, :responder)
+  defp dispatcher do
+    Application.get_env(:webfw_http_server, :dispatcher)
   end
 end

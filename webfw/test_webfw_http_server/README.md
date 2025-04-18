@@ -4,6 +4,10 @@ This is a sample long-running web-application what use the webfw_http_server
 as an external dependency.
 This application is created to test the `webfw_http_server` library.
 
+## Note:
+to play with this subproject you should checkout repo to the commit: `df3f6c2`
+(to get the first version with responder, not with dispatcher for Plug lib)
+
 
 it was created by:
 ```sh

@@ -22,3 +22,8 @@ config :webfw_http_server, responder: YourWebApp.Responder
 ```
 
 
+plug_webfw_http_server - example how to use own http server with a Plug library
+
+```sh
+mix new plug_webfw_http_server --module Plug.Webfw.HttpServer
+```
