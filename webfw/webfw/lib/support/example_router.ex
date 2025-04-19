@@ -1,11 +1,15 @@
-defmodule Webfw.ExampleRouter do
+defmodule WebApp.ExampleRouter do
   use Plug.Router
 
   plug :match
   plug :dispatch
 
   get "/greet" do
-    Webfw.ExampleController.call(conn, action: :greet)
+    WebApp.ExampleController.call(conn, action: :greet)
+  end
+
+  get "/redirect_greet" do
+    WebApp.ExampleController.call(conn, action: :redirect_greet)
   end
 
   match _ do

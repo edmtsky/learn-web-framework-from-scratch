@@ -13,7 +13,7 @@ defmodule WebApp do
   def run_with_own_impl() do
     # Code.require_file("./lib/support/example_controller.ex")
     # Code.require_file("./lib/support/example_router.ex")
-    opts = [plug: Webfw.ExampleRouter, port: 4040, options: []]
+    opts = [plug: WebApp.ExampleRouter, port: 4040, options: []]
 
     # Here is the choice of the option through what to launch a web application
     %{start: {mod, fun, args}} = Plug.Webfw.HttpServer.child_spec(opts)
@@ -28,7 +28,7 @@ defmodule WebApp do
     # Code.require_file("./lib/support/example_controller.ex")
     # Code.require_file("./lib/support/example_router.ex")
     # Mix.install([{:plug_cowboy, "~> 2.0"}])
-    opts = [scheme: :http, plug: Webfw.ExampleRouter, options: [port: 4040]]
+    opts = [scheme: :http, plug: WebApp.ExampleRouter, options: [port: 4040]]
 
     %{start: {mod, fun, args}} = Plug.Cowboy.child_spec(opts)
 

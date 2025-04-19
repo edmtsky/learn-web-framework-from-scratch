@@ -1,4 +1,4 @@
-defmodule Webfw.ExampleController do
+defmodule WebApp.ExampleController do
   @moduledoc """
   this is a simple WebApp example of how to use plug with Webfw
   """
@@ -14,6 +14,11 @@ defmodule Webfw.ExampleController do
     conn
     |> put_status(200)
     |> render(:json, %{status: "ok"})
+  end
+
+  def redirect_greet(conn, _params) do
+    conn
+    |> redirect(to: "/greet")
   end
 
 end
