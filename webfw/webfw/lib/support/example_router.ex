@@ -12,6 +12,10 @@ defmodule WebApp.ExampleRouter do
     WebApp.ExampleController.call(conn, action: :redirect_greet)
   end
 
+  get "/check_auth" do
+    WebApp.ExampleAuthController.call(conn, action: :check_auth)
+  end
+
   match _ do
     send_resp(conn, 404, "Not Found")
   end
