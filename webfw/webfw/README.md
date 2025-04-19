@@ -156,3 +156,50 @@ content-type: application/json; charset=utf-8
 {"status":"ok"}
 ```
 cornel cases: without Authorization header and bad-token
+
+
+
+## check out action_fallback
+
+see ./test/support/example_fallback_controller_test.exs
+
+manually:
+```sh
+iex -S mix
+```
+
+run in iex to spin up the http server
+```elixir
+iex> WebApp.run_with_plug_cowboy()
+```
+
+(-H means --header)
+```sh
+curl -s -i "http://localhost:4040/check_fallback?greet=true"
+```
+
+> happy path:
+```
+HTTP/1.1 302 Found
+cache-control: max-age=0, private, must-revalidate
+content-length: 73
+content-type: text/html; charset=utf-8
+location: /greet
+server: Cowboy
+
+<html><body>You are being <a href="/greet"> redirected</a>.</body></html>
+```
+
+> fail:
+```sh
+curl -s -i "http://localhost:4040/check_fallback"
+```
+```
+HTTP/1.1 500 Internal Server Error
+cache-control: max-age=0, private, must-revalidate
+content-length: 22
+content-type: application/json; charset=utf-8
+server: Cowboy
+
+{"error":"bad params"}
+```
