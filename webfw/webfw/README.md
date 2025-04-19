@@ -138,3 +138,21 @@ content-type: application/json; charset=utf-8
 {"status":"ok"}
 ```
 
+
+- d63e5b1 use Plug.Builder to build pipeline with ensure_authorized
+to check this functionality you can runn this test:
+./test/support/example_auth_controller_test.exs
+
+or manualy via curl:
+happy path:
+```sh
+curl -si -H "Authorization: Bearer secret" http://localhost:4040/check_auth
+```
+```
+HTTP/1.1 200
+...
+content-type: application/json; charset=utf-8
+
+{"status":"ok"}
+```
+cornel cases: without Authorization header and bad-token
