@@ -19,5 +19,22 @@ defmodule HtmlEexWebApp.ControllerTest do
         HtmlEexWebApp.Router.call(conn, [])
       end)
     end
+
+    test "responds with an HTML document" do
+      conn = conn(:get, "/greet?greeting=Hola")
+
+      conn = HtmlEexWebApp.Router.call(conn, [])
+
+      assert conn.status == 200
+
+      {:ok, html} = Floki.parse_document(conn.resp_body)
+
+      heading =
+        html
+        |> Floki.find("h1")
+        |> Floki.text()
+
+      assert heading == "Hola World!"
+    end
   end
 end
