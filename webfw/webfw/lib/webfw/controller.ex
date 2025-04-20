@@ -13,6 +13,12 @@ defmodule Webfw.Controller do
     |> send_resp(status, Jason.encode!(data))
   end
 
+  def render(conn, :html, data) when is_binary(data) do
+    conn
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, data)
+  end
+
   @doc """
   make a redirect to a given location(url)
   """
