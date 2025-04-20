@@ -20,13 +20,26 @@ how to check:
 
 t2:
 ```sh
-curl -si  http://localhost:4040/greet
-
+curl -si  http://localhost:4040/greet?greeting=Hi
+```
+```
 HTTP/1.1 200 OK
 cache-control: max-age=0, private, must-revalidate
 content-length: 21
 content-type: text/html; charset=utf-8
 server: Cowboy
 
-<h1>Hello World</h1>
+<h1>Hi World</h1>
+```
+
+```sh
+curl -si  http://localhost:4040/greet
+```
+```
+HTTP/1.1 400 Bad Request
+cache-control: max-age=0, private, must-revalidate
+content-length: 21
+server: Cowboy
+
+<h1>Bad Request</h1>
 ```

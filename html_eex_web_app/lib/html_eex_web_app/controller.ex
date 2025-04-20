@@ -2,7 +2,6 @@ defmodule HtmlEexWebApp.Controller do
   use Plug.Builder
 
   import Plug.Conn
-  import Webfw.Controller
 
   def call(conn, action: action) do
     conn = super(conn, [])
@@ -13,24 +12,16 @@ defmodule HtmlEexWebApp.Controller do
   def greet(conn, %{"greeting" => greeting}) do
     conn
     |> put_status(200)
-    |> render_html("greet.html.eex", greeting: greeting)
+    |> render("greet.html.eex", greeting: greeting)
   end
 
-  require EEx
-
-  # wrapper around `Webfw.Controller.render/3` to
-  # render html.eex templates from `priv/templates` directory
-  defp render_html(conn, file, assigns) do
-    contents =
-      file
-      |> html_file_path()
-      |> EEx.eval_file(assigns: assigns)
-
-    render(conn, :html, contents)
+  def greet(conn, _params) do
+    send_resp(conn, 400, "<h1>Bad Request</h1>\n")
   end
 
-  # fetches html file from `priv/templates` directory
-  defp html_file_path(file) do
-    Path.join([:code.priv_dir(:html_eex_web_app), "templates", file])
+  @type option_t :: {atom(), String.t()}
+  @spec render(Plug.Conn.t(), String.t(), [option_t]) :: Plug.Conn.t()
+  def render(conn, file, assigns) do
+    HtmlEexWebApp.View.render(conn, file, assigns)
   end
 end
