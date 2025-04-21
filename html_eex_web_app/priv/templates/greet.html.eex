@@ -1,1 +1,3 @@
 <h1><%= @greeting %> World!</h1>
+<%= func_a() %>
+<%= HtmlEexWebApp.View.func_a() %>
