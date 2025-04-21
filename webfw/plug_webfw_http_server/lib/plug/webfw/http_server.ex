@@ -11,7 +11,10 @@ defmodule Plug.Webfw.HttpServer do
       {__MODULE__, [plug: plug, options: options]}
     )
 
-    %{start: {__MODULE__, :start_linked_server, [port]}}
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_linked_server, [port]}
+    }
   end
 
   def start_linked_server(port) do
@@ -51,6 +54,8 @@ defmodule Plug.Webfw.HttpServer do
   def conn_from_req(req, method, path) do
     {:ok, {remote_ip, _}} = :inet.sockname(req)
     %URI{path: path, query: qs} = URI.parse(path)
+
+    qs = qs || ""
 
     %Plug.Conn{
       adapter: {@adapter, {req, method, path}},
