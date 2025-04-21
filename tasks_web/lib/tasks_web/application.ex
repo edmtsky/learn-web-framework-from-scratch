@@ -11,6 +11,11 @@ defmodule TasksWeb.Application do
           port: 4040,
           options: []
         ]
+      },
+      {
+        TasksWeb.Tasks,
+        # initial state of the store
+        []
       }
     ]
 

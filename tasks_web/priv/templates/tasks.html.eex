@@ -1,0 +1,18 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <%= for {name, description} <- @tasks do %>
+    <tr>
+      <td><%= name %></td>
+      <td><%= description %></td>
+    </tr>
+  <% end %>
+
+  </tbody>
+</table>
