@@ -19,6 +19,13 @@ defmodule TasksWeb.TaskController do
     |> render("tasks.html.eex", tasks: tasks)
   end
 
+  def create(conn, %{"name" => name, "description" => description}) do
+    Tasks.add(name, description)
+
+    conn
+    |> Webfw.Controller.redirect(to: "/tasks")
+  end
+
   # Taken from other examples
   defp render(conn, file, assigns) do
     TasksWeb.TaskView.render(conn, file, assigns)

@@ -5,8 +5,10 @@ defmodule TasksWeb.Application do
   def start(_type, _args) do
     children = [
       {
-        Plug.Webfw.HttpServer,
+        # Plug.Webfw.HttpServer,
+        Plug.Cowboy,
         [
+          scheme: :http,
           plug: TasksWeb.Router,
           port: 4040,
           options: []
