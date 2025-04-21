@@ -4,14 +4,18 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
 
-  <%= for {name, description} <- @tasks do %>
+  <%= for {{name, description}, index} <- Enum.with_index(@tasks) do %>
     <tr>
       <td><%= name %></td>
       <td><%= description %></td>
+      <td>
+        <a href="/tasks/<%= index %>/delete">Delete</a>
+      </td>
     </tr>
   <% end %>
 

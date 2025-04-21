@@ -26,6 +26,15 @@ defmodule TasksWeb.TaskController do
     |> Webfw.Controller.redirect(to: "/tasks")
   end
 
+  def delete(conn, %{"id" => id}) do
+    id
+    |> String.to_integer()
+    |> Tasks.delete()
+
+    conn
+    |> Webfw.Controller.redirect(to: "/tasks")
+  end
+
   # Taken from other examples
   defp render(conn, file, assigns) do
     TasksWeb.TaskView.render(conn, file, assigns)
