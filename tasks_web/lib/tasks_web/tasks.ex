@@ -3,7 +3,7 @@ defmodule TasksWeb.Tasks do
   In-memory, volatile store for tasks. Relies on Agent interface.
   """
 
-  def start_link() do                                # 1
+  def start_link() do
     Agent.start_link(fn -> [] end, name: __MODULE__)
   end
 
@@ -25,5 +25,10 @@ defmodule TasksWeb.Tasks do
 
   def delete(index) do
     Agent.update(__MODULE__, &List.delete_at(&1, index))
+  end
+
+  # for testing
+  def delete_all() do
+    Agent.update(__MODULE__, fn _state -> [] end)
   end
 end

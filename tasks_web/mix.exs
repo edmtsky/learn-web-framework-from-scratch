@@ -23,6 +23,7 @@ defmodule TasksWeb.MixProject do
   defp deps do
     [
       {:webfw, path: "../webfw/webfw"},
+      {:floki, "~> 0.37.1", only: :test}
     ]
   end
 end
