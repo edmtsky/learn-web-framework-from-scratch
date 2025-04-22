@@ -62,13 +62,22 @@ defmodule Plug.Webfw.HttpServer do
       host: nil,
       method: Atom.to_string(method),
       owner: self(),
-      path_info: path |> Path.relative_to("/") |> Path.split(),
+      path_info: split_path(path),
       port: nil,
       remote_ip: remote_ip,
       query_string: qs,
+      params: Plug.Conn.Query.decode(qs),
       req_headers: [],
       request_path: path,
       scheme: :http
     }
+  end
+
+  defp split_path(path) do
+    if path == "/" do
+      [path]
+    else
+      path |> Path.relative_to("/") |> Path.split()
+    end
   end
 end
